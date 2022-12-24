@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:13.3
+
+    container_name: postgres
+
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=bank_accounts
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=qwerty
+    volumes:
+      - ./fillData.sql:/docker-entrypoint-initdb.d/fillData.sql
+volumes:
+  db-data:
+

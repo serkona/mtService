@@ -16,7 +16,7 @@ public interface BalanceService {
      * Изменение баланса на определённое значение
      *
      * @param id    идентификатор банковского счёта
-     * @param value сумма денег, которую нужно добавить к банковскому счёту
+     * @param amount сумма денег, которую нужно добавить к банковскому счёту
      */
 
     void changeBalance(Long id, Long amount);

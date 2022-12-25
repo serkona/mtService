@@ -12,8 +12,12 @@ public class MtController {
     @Autowired
     BalanceServiceImpl balanceServiceIml;
 
+    @Autowired
+    ProfileScheduler profileScheduler;
+
     @GetMapping("/getBalance")
     public CompletableFuture<Optional<Long>> getBalance(@RequestParam(value = "id") Long id) {
+        profileScheduler.addGetReq();
         return balanceServiceIml.getBalance(id);
     }
 
@@ -21,6 +25,7 @@ public class MtController {
     @PutMapping("/changeBalance")
     public void changeBalance(@RequestParam(value = "id") Long id,
                               @RequestParam(value = "amount") Long amount) {
+        profileScheduler.addChangeReq();
         balanceServiceIml.changeBalance(id, amount);
     }
 
@@ -40,8 +45,6 @@ public class MtController {
     }
 
      */
-
-
 
 
 }

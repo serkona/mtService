@@ -1,5 +1,6 @@
 package com.example.mtservice;
 
+import com.example.mtservice.client.ClientService;
 import com.example.mtservice.data.entity.Account;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +18,25 @@ import java.util.concurrent.ExecutionException;
 public class MtController {
 
     @NonNull
+    ClientService clientService;
+
+    @NonNull
     BalanceServiceImpl balanceServiceIml;
 
     @NonNull
     ProfileScheduler profileScheduler;
 
+
     @GetMapping("/getBalance")
-    public ResponseEntity<CompletableFuture<Optional<Long>>> getBalance(@RequestParam(value = "id") Long id) throws RuntimeException, ExecutionException, InterruptedException {
+    public ResponseEntity<Optional<Long>> getBalance(@RequestParam(value = "id") Long id) throws RuntimeException, ExecutionException, InterruptedException {
         profileScheduler.addGetReq();
 
         CompletableFuture<Optional<Long>> balance = balanceServiceIml.getBalance(id);
 
         if (balance.get().isEmpty())
-            return new ResponseEntity<>(balance, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(balance.get(), HttpStatus.NOT_FOUND);
 
-        return new ResponseEntity<>(balance, HttpStatus.OK);
+        return new ResponseEntity<>(balance.get(), HttpStatus.OK);
     }
 
 
@@ -41,7 +46,7 @@ public class MtController {
         profileScheduler.addChangeReq();
         Optional<Account> account;
 
-        boolean hadCreated = Objects.requireNonNull(getBalance(id).getBody()).get().isPresent();
+        boolean hadCreated = Objects.requireNonNull(getBalance(id).getBody()).isPresent();
         balanceServiceIml.changeBalance(id, amount);
         account = balanceServiceIml.getAccount(id).get();
 

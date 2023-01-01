@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -36,8 +37,8 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Async
-    @CachePut
-    public CompletableFuture<Optional<Account>> getAccount(long id) {
+    @CachePut(value = "accounts")
+    public CompletableFuture<Optional<Account>> getAccount(Long id) {
         return CompletableFuture.completedFuture(balanceRepo.findById(id));
     }
 

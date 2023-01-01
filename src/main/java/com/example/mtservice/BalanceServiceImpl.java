@@ -2,7 +2,8 @@ package com.example.mtservice;
 
 import com.example.mtservice.data.BalanceRepo;
 import com.example.mtservice.data.entity.Account;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.scheduling.annotation.Async;
@@ -13,24 +14,31 @@ import java.util.concurrent.CompletableFuture;
 
 
 @Service
-@CacheConfig(cacheNames="accounts")
+@CacheConfig(cacheNames = "accounts")
+@RequiredArgsConstructor
 public class BalanceServiceImpl implements BalanceService {
 
-    @Autowired
+    @NonNull
     BalanceRepo balanceRepo;
 
     @Async
-    @CachePut(value="accounts")
+    @CachePut(value = "accounts")
     public CompletableFuture<Optional<Long>> getBalance(Long id) {
         return CompletableFuture.completedFuture(balanceRepo.findById(id).map(Account::getBalance));
     }
 
     @Async
-    @CachePut(value="accounts")
+    @CachePut(value = "accounts")
     public void changeBalance(Long id, Long amount) {
         Optional<Account> account = balanceRepo.findById(id);
-        account.ifPresent(value -> value.setBalance(value.getBalance() + amount));
+        account.ifPresentOrElse(value -> value.setBalance(value.getBalance() + amount), () -> balanceRepo.save(new Account(id, amount)));
         account.ifPresent(value -> balanceRepo.save(value));
+    }
+
+    @Async
+    @CachePut
+    public CompletableFuture<Optional<Account>> getAccount(long id) {
+        return CompletableFuture.completedFuture(balanceRepo.findById(id));
     }
 
     /*
@@ -48,9 +56,6 @@ public class BalanceServiceImpl implements BalanceService {
 
 
      */
-
-
-
 
 
 }

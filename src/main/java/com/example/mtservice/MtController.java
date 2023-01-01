@@ -1,36 +1,62 @@
 package com.example.mtservice;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.mtservice.data.entity.Account;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
+@RequiredArgsConstructor
 public class MtController {
 
-    @Autowired
+    @NonNull
     BalanceServiceImpl balanceServiceIml;
 
-    @Autowired
+    @NonNull
     ProfileScheduler profileScheduler;
 
     @GetMapping("/getBalance")
-    public CompletableFuture<Optional<Long>> getBalance(@RequestParam(value = "id") Long id) {
+    public ResponseEntity<CompletableFuture<Optional<Long>>> getBalance(@RequestParam(value = "id") Long id) throws RuntimeException, ExecutionException, InterruptedException {
         profileScheduler.addGetReq();
-        return balanceServiceIml.getBalance(id);
+
+        CompletableFuture<Optional<Long>> balance = balanceServiceIml.getBalance(id);
+
+        if (balance.get().isEmpty())
+            return new ResponseEntity<>(balance, HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(balance, HttpStatus.OK);
     }
 
 
     @PutMapping("/changeBalance")
-    public void changeBalance(@RequestParam(value = "id") Long id,
-                              @RequestParam(value = "amount") Long amount) {
+    public ResponseEntity<Optional<Account>> changeBalance(@RequestParam(value = "id") Long id,
+                                                           @RequestParam(value = "amount") Long amount) throws RuntimeException, ExecutionException, InterruptedException {
         profileScheduler.addChangeReq();
+        Optional<Account> account;
+
+        boolean hadCreated = Objects.requireNonNull(getBalance(id).getBody()).get().isPresent();
         balanceServiceIml.changeBalance(id, amount);
+        account = balanceServiceIml.getAccount(id).get();
+
+        if (hadCreated)
+            return new ResponseEntity<>(account, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(account, HttpStatus.CREATED);
+
     }
 
 
-
+    @ExceptionHandler({RuntimeException.class, ExecutionException.class, InterruptedException.class})
+    public String handleException() {
+        return "Exception";
+    }
 
     /*
 

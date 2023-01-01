@@ -1,6 +1,7 @@
 package com.example.mtservice.data.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,14 +11,12 @@ import org.springframework.stereotype.Component;
 @Data
 @Table(name = "accounts")
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
     private Long id;
 
-    @Column
     private Long balance;
 
 

@@ -24,4 +24,5 @@ public class DataLoader {
         balanceRepo.save(new Account(4L, 50010L));
         balanceRepo.save(new Account(5L, 60051L));
     }
+
 }

@@ -1,4 +1,9 @@
-CREATE TABLE IF NOT EXISTS accounts (
-        ID BIGINT NOT NULL,
-        BALANCE BIGINT
+CREATE TABLE IF NOT EXISTS accounts
+(
+    ID
+    BIGINT
+    NOT
+    NULL,
+    BALANCE
+    BIGINT
 );

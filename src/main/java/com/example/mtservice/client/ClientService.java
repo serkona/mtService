@@ -19,11 +19,12 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class ClientService {
 
-    public final List<Long> readIdList = List.of(1L, 2L, 3L, 4L, 5L);
-    public final List<Long> writeIdList = List.of(1L, 2L, 3L, 4L, 5L);
-    public final long readQuota = 10;
-    public final long writeQuota = 20;
-
+    private final List<Long> readIdList = List.of(1L, 2L, 3L, 4L, 5L);
+    private final List<Long> writeIdList = List.of(1L, 2L, 3L, 4L, 5L);
+    private final long readQuota = 10;
+    private final long writeQuota = 20;
+    private final long threadCount = 10;
+    private final long interval = 15;
 
     private final WebClient webClient = WebClient.create("http://localhost:8080");
 
@@ -51,9 +52,8 @@ public class ClientService {
 
     }
 
-    @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 15)
+    @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = interval)
     public void sendRequests() {
-        long threadCount = 5;
 
         for (int i = 0; i < threadCount; i++) {
 

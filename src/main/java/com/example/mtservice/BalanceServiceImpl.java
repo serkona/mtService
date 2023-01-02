@@ -1,16 +1,11 @@
 package com.example.mtservice;
 
-import com.example.mtservice.BalanceService;
 import com.example.mtservice.data.BalanceRepo;
 import com.example.mtservice.data.entity.Account;
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +41,6 @@ public class BalanceServiceImpl implements BalanceService {
     public CompletableFuture<Optional<Account>> getAccount(Long id) {
         return CompletableFuture.completedFuture(balanceRepo.findById(id));
     }
-
-
-
 
 
 }

@@ -9,11 +9,11 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=bank_accounts
+      - POSTGRES_DB=accounts
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=qwerty
     volumes:
-      - ./fillData.sql:/docker-entrypoint-initdb.d/fillData.sql
+      - ./initDb.sql:/docker-entrypoint-initdb.d/initDb.sql
 volumes:
   db-data:
 

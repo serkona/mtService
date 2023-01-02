@@ -1,16 +1,10 @@
 package com.example.mtservice.client;
 
 
-import com.example.mtservice.data.BalanceRepo;
 import com.example.mtservice.data.entity.Account;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
@@ -24,14 +18,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class ClientService {
-    /*
-    @NonNull
-    BalanceRepo balanceRepo;
-
-    public final List<Long> readIdList = balanceRepo.findAllIds();
-    public final List<Long> writeIdList = balanceRepo.findAllIds();
-
-     */
 
     public final List<Long> readIdList = List.of(1L, 2L, 3L, 4L, 5L);
     public final List<Long> writeIdList = List.of(1L, 2L, 3L, 4L, 5L);
